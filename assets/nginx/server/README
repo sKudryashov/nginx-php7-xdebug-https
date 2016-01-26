@@ -1,0 +1,3 @@
+# Add to nginx.conf
+include /path/to/server/etc/nginx/nginx.conf;                                                                                                                                                         
+include /path/to/server/etc/nginx/sites-enabled/*;

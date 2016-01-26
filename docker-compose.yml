@@ -1,0 +1,11 @@
+web:
+  image: "sfera/nginx-php7"
+  ports:
+    - "80:80"
+    - "9090:9090"
+    - "2224:22"
+    - "9000:9000"
+    - "9001:9001"
+    - "443:443"
+  volumes:
+    - ./:/usr/share/nginx/html/
