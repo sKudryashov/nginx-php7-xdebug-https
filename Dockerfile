@@ -138,9 +138,9 @@ RUN sed -i -e 's/group = nobody/group = www-data/g' /usr/local/php70/etc/php-fpm
 RUN sed -i -e 's/display_errors = Off/display_errors = On/g' /usr/local/php70/php.ini
 RUN sed -i -e 's/display_startup_errors = Off/display_startup_errors = On/g' /usr/local/php70/php.ini
 RUN sed -i -e 's/error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT/error_reporting = E_ALL/g' /usr/local/php70/php.ini
-RUN sed -i -e 's/;error_log = syslog/error_log = /var/log/php_errors.log/g' /usr/local/php70/php.ini
+RUN sed -i -e 's/;error_log = syslog/error_log = \/var\/log\/php_errors.log/g' /usr/local/php70/php.ini
 #RUN sed -i -e 's/?????log_errors = ????/log_errors = On/g' /usr/local/php70/php.ini
-RUN sed -i -e 's/;error_log = log\/php-fpm.log\/error_log = \/var\/log\/php-fpm.log/g' /usr/local/php70/etc/php-fpm.conf
+RUN sed -i -e 's/;error_log = log/php-fpm.log\/error_log = \/var\/log\/php-fpm.log/g' /usr/local/php70/etc/php-fpm.conf
 RUN sed -i -e 's/;log_level = notice/log_level = notice/g' /usr/local/php70/etc/php-fpm.conf
 RUN touch /var/log/php_errors.log && chmod 0664 /var/log/php_errors.log
 RUN touch /var/log/php-fpm.log && chmod 0664 /var/log/php-fpm.log
