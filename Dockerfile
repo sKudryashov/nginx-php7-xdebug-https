@@ -29,7 +29,9 @@ RUN git clone https://github.com/php/php-src.git /usr/local/src/php
 ADD ./assets/php /tmp/php-repository
 RUN cd /tmp/php-repository && tar -xvf php-7.0.2.tar.bz2 && cp -R ./php-7.0.2/* /usr/local/src/php
 # Compile PHP7 right now to bootstrap everything else
-RUN apt-get -y install autoconf re2c bison libxml2-dev libssl-dev && cd /usr/local/src/php && ./configure \
+RUN apt-get update
+RUN apt-get -y install libssl-dev libxml2-dev --fix-missing
+RUN apt-get -y install autoconf re2c bison && cd /usr/local/src/php && ./configure \
     --prefix=/usr/local/php70 \
     --with-config-file-path=/usr/local/php70 \
     --with-config-file-scan-dir=/usr/local/php70/conf.d \
@@ -70,8 +72,8 @@ RUN	cd /usr/local/src/php && \
     rm /usr/local/php70/etc/php-fpm.d/www.conf.default
 
 #install xdebug
-ADD assets/xdebug-2.4.0rc3 /tmp/xdebug-2.4.0rc3
-RUN cd /tmp/xdebug-2.4.0rc3/xdebug-2.4.0RC3 && phpize && ./configure --with-php-config=/usr/local/php70/bin/php-config \
+ADD assets/xdebug-2.4.0rc4 /tmp/xdebug-2.4.0rc4
+RUN cd /tmp/xdebug-2.4.0rc4/xdebug-2.4.0RC4 && phpize && ./configure --with-php-config=/usr/local/php70/bin/php-config \
  && make && make install
 #RUN cp /tmp/xdebug-2.4.0rc3/xdebug-2.4.0RC3/modules/xdebug.so /usr/local/php70/conf.d
 #Xdebug path in system: /usr/local/php70/lib/php/extensions/no-debug-non-zts-20151012/xdebug.so
@@ -139,9 +141,10 @@ RUN sed -i -e 's/display_errors = Off/display_errors = On/g' /usr/local/php70/ph
 RUN sed -i -e 's/display_startup_errors = Off/display_startup_errors = On/g' /usr/local/php70/php.ini
 RUN sed -i -e 's/error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT/error_reporting = E_ALL/g' /usr/local/php70/php.ini
 RUN sed -i -e 's/;error_log = syslog/error_log = \/var\/log\/php_errors.log/g' /usr/local/php70/php.ini
-#RUN sed -i -e 's/?????log_errors = ????/log_errors = On/g' /usr/local/php70/php.ini
-RUN sed -i -e 's/;error_log = log/php-fpm.log\/error_log = \/var\/log\/php-fpm.log/g' /usr/local/php70/etc/php-fpm.conf
+RUN sed -i -e 's/;error_log = log\/php-fpm.log/error_log = \/var\/log\/php-fpm.log/g' /usr/local/php70/etc/php-fpm.conf
 RUN sed -i -e 's/;log_level = notice/log_level = notice/g' /usr/local/php70/etc/php-fpm.conf
+RUN sed -i -e 's/;catch_workers_output = yes/catch_workers_output = yes/g' /usr/local/php70/etc/php-fpm.d/www.conf
+
 RUN touch /var/log/php_errors.log && chmod 0664 /var/log/php_errors.log
 RUN touch /var/log/php-fpm.log && chmod 0664 /var/log/php-fpm.log
 

@@ -1,5 +1,5 @@
 web:
-  image: "sfera/nginx-php7"
+  image: "sfera/php7-nginx"
   ports:
     - "80:80"
     - "9090:9090"
